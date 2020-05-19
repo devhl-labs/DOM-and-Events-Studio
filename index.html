@@ -57,7 +57,16 @@
             for (let direction of dpad)
                 direction.addEventListener('click', directionClick);
 
+            document.addEventListener('keydown', keydown);
+
             land();
+        }
+
+        function keydown(event) {
+            if (event.key === 'ArrowUp' && takeoff.disabled) move('Up');
+            if (event.key === 'ArrowDown' && takeoff.disabled) move('Down');
+            if (event.key === 'ArrowLeft' && takeoff.disabled) move('Left');
+            if (event.key === 'ArrowRight' && takeoff.disabled) move('Right');
         }
 
         function takeoffClick(event) {
@@ -79,7 +88,11 @@
         }
 
         function directionClick(event) {
-            let direction = event.target.innerHTML;
+            move(event.target.innerHTML);
+        }
+
+        function move(direction) {
+            //let direction = event.target.innerHTML;
 
             if (direction === 'Up') {
                 if (bottom < 0) bottom += 10;
