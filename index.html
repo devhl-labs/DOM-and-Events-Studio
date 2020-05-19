@@ -61,6 +61,8 @@
                 flightStatus.innerHTML = 'Shuttle in flight.';
                 shuttleBackground.style = ' background-color:blue;';
                 spaceShuttleHeight.innerHTML = Number(spaceShuttleHeight.innerHTML) + 10000;
+                bottom += 10;
+                rocket.style = `position:relative;bottom:${bottom}px;left:${left}px;`;
             }
         }
 
