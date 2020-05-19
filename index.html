@@ -41,49 +41,40 @@
 
         let bottom = -250;
         let left = 0;
+        let dpad;
+        landing.disabled = true;
+        missionAbort.disabled = true;
         window.addEventListener('load', windowLoad);
 
         function windowLoad(event) {
-            var dpad = document.querySelectorAll('body > div:nth-child(2) > div:nth-child(3) > button');
+            dpad = document.querySelectorAll('body > div:nth-child(2) > div:nth-child(3) > button');
             rocket.style = `position:relative;bottom:${bottom}px;left:${left};`;
 
             takeoff.addEventListener('click', takeoffClick);
             landing.addEventListener('click', landingClick);
             missionAbort.addEventListener('click', abortClick);
 
-            for (let direction of dpad) {
+            for (let direction of dpad)
                 direction.addEventListener('click', directionClick);
-            }
+
+            land();
         }
 
         function takeoffClick(event) {
-            if (confirm('Confirm that the shuttle is ready for takeof.')) {
-                flightStatus.innerHTML = 'Shuttle in flight.';
-                shuttleBackground.style = ' background-color:blue;';
-                spaceShuttleHeight.innerHTML = Number(spaceShuttleHeight.innerHTML) + 10000;
-                bottom += 10;
-                rocket.style = `position:relative;bottom:${bottom}px;left:${left}px;`;
-            }
+            if (confirm('Confirm that the shuttle is ready for takeof.'))
+                takeOff();
         }
 
         function landingClick(event) {
             alert('The shuttle is landing. Landing gear engaged.');
             flightStatus.innerHTML = 'The shuttle has landed.';
-            bottom = -250;
-            left = 0;
-            rocket.style = `position:relative;bottom:${bottom}px;left:${left}px;`;
-            shuttleBackground.style = ' background-color:green';
-            spaceShuttleHeight.innerHTML = 0;
+            land();
         }
 
         function abortClick(event) {
             if (confirm('Confirm that you want to abort the mission.')) {
                 flightStatus.innerHTML = 'Mission aborted.';
-                shuttleBackground.style = ' background-color:green';
-                spaceShuttleHeight.innerHTML = 0;
-                bottom = -250;
-                left = 0;
-                rocket.style = `position:relative;bottom:${bottom}px;left:${left}px;`;
+                land();
             }
         }
 
@@ -91,10 +82,8 @@
             let direction = event.target.innerHTML;
 
             if (direction === 'Up') {
-                if (bottom < 0)
-                    bottom += 10;
+                if (bottom < 0) bottom += 10;
                 spaceShuttleHeight.innerHTML = Number(spaceShuttleHeight.innerHTML) + 10000;
-                shuttleBackground.style = ' background-color:blue;';
             }
             if (direction === 'Down' && bottom > -250) {
                 bottom -= 10;
@@ -104,6 +93,32 @@
             if (direction === 'Right' && left < 360) left += 10;
 
             rocket.style = `position:relative;bottom:${bottom}px;left:${left}px;`;
+        }
+
+        function land() {
+            bottom = -250;
+            left = 0;
+            rocket.style = `position:relative;bottom:${bottom}px;left:${left}px;`;
+            shuttleBackground.style = ' background-color:green';
+            spaceShuttleHeight.innerHTML = 0;
+            takeoff.disabled = false;
+            landing.disabled = true;
+            missionAbort.disabled = true;
+            for (let direction of dpad)
+                direction.disabled = true;
+        }
+
+        function takeOff() {
+            bottom += 10;
+            flightStatus.innerHTML = 'Shuttle in flight.';
+            rocket.style = `position:relative;bottom:${bottom}px;left:${left}px;`;
+            shuttleBackground.style = ' background-color:blue';
+            spaceShuttleHeight.innerHTML = Number(spaceShuttleHeight.innerHTML) + 10000;
+            takeoff.disabled = true;
+            landing.disabled = false;
+            missionAbort.disabled = false;
+            for (let direction of dpad)
+                direction.disabled = false;
         }
 
     </script>
