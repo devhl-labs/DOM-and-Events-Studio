@@ -39,33 +39,17 @@
 
     <script>
 
-        //let takeoff = document.getElementById('takeoff');
-        //let landing = document.getElementById('landing');
-        //let flightStatus = document.getElementById('flightStatus');
-        //let shuttleBackground = document.getElementById('shuttleBackground');
-        //let shuttleHeight; // = document.getElementById('spaceShuttleHeight');
-        //let abort = document.getElementById('missionAbort');
-        //let dpad = document.querySelectorAll('body > div:nth-child(2) > div:nth-child(3) > button');
-        //let rocket = document.getElementById('rocket');
-
-        window.addEventListener('load', windowLoad);
         let bottom = -250;
         let left = 0;
+        window.addEventListener('load', windowLoad);
 
         function windowLoad(event) {
-            var takeoff = document.getElementById('takeoff');
-            var landing = document.getElementById('landing');
-            var flightStatus = document.getElementById('flightStatus');
-            var shuttleBackground = document.getElementById('shuttleBackground');
-            var shuttleHeight = document.getElementById('spaceShuttleHeight');
-            var abort = document.getElementById('missionAbort');
             var dpad = document.querySelectorAll('body > div:nth-child(2) > div:nth-child(3) > button');
-            var rocket = document.getElementById('rocket');
             rocket.style = `position:relative;bottom:${bottom}px;left:${left};`;
 
             takeoff.addEventListener('click', takeoffClick);
             landing.addEventListener('click', landingClick);
-            abort.addEventListener('click', abortClick);
+            missionAbort.addEventListener('click', abortClick);
 
             for (let direction of dpad) {
                 direction.addEventListener('click', directionClick);
@@ -73,46 +57,51 @@
         }
 
         function takeoffClick(event) {
-            console.log(flightStatus);
-            console.log(shuttleHeight);
-
-            //if (confirm('Confirm that the shuttle is ready for takeof.')) {
-            //    flightStatus.innerHTML = 'Shuttle in flight.';
-            //    shuttleBackground.style = ' background-color:blue;';
-                //shuttleHeight.innerHTML = Number(shuttleHeight.innerHTML) + 10000;
-            //}
+            if (confirm('Confirm that the shuttle is ready for takeof.')) {
+                flightStatus.innerHTML = 'Shuttle in flight.';
+                shuttleBackground.style = ' background-color:blue;';
+                spaceShuttleHeight.innerHTML = Number(spaceShuttleHeight.innerHTML) + 10000;
+            }
         }
 
         function landingClick(event) {
             alert('The shuttle is landing. Landing gear engaged.');
             flightStatus.innerHTML = 'The shuttle has landed.';
+            bottom = -250;
+            left = 0;
+            rocket.style = `position:relative;bottom:${bottom}px;left:${left}px;`;
             shuttleBackground.style = ' background-color:green';
-            shuttleHeight.innerHTML = 0;
+            spaceShuttleHeight.innerHTML = 0;
         }
 
         function abortClick(event) {
-            if (confirm('Confirm taht you want to abort the mission.')) {
+            if (confirm('Confirm that you want to abort the mission.')) {
                 flightStatus.innerHTML = 'Mission aborted.';
                 shuttleBackground.style = ' background-color:green';
-                shuttleHeight.innerHTML = 0;
+                spaceShuttleHeight.innerHTML = 0;
+                bottom = -250;
+                left = 0;
+                rocket.style = `position:relative;bottom:${bottom}px;left:${left}px;`;
             }
         }
 
         function directionClick(event) {
             let direction = event.target.innerHTML;
-            console.log(shuttleHeight);
+
             if (direction === 'Up') {
-                bottom += 10;
-                shuttleHeight.innerHTML += 10000;
+                if (bottom < 0)
+                    bottom += 10;
+                spaceShuttleHeight.innerHTML = Number(spaceShuttleHeight.innerHTML) + 10000;
+                shuttleBackground.style = ' background-color:blue;';
             }
-            if (direction === 'Down') bottom -= 10;
-            if (direction === 'Left') left -= 10;
-            if (direction === 'Right') left += 10;
+            if (direction === 'Down' && bottom > -250) {
+                bottom -= 10;
+                spaceShuttleHeight.innerHTML = Number(spaceShuttleHeight.innerHTML) - 10000;
+            }
+            if (direction === 'Left' && left > -360) left -= 10;
+            if (direction === 'Right' && left < 360) left += 10;
 
             rocket.style = `position:relative;bottom:${bottom}px;left:${left}px;`;
-            
-
-            console.log(rocket.style);
         }
 
     </script>
